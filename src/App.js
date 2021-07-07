@@ -3,6 +3,7 @@ import Title from './comps/Title';
 import UploadForm from './comps/UploadForm';
 import ImageGrid from './comps/ImageGrid';
 import Modal from './comps/Modal';
+import NavBari from "./comps/NavBari";
 
 function App() {
   const [selectedImg,setSelectedImg] = useState(null);
@@ -10,6 +11,7 @@ function App() {
 
   return (
     <div className="App">
+      <NavBari />
       <Title/>
       <UploadForm />
       <ImageGrid  setSelectedImg={setSelectedImg}/>
