@@ -1,25 +1,62 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState} from 'react';
 import { Form, Button, Card, Alert, Container } from 'react-bootstrap';
 import { Link, useHistory } from "react-router-dom";
-
+import { useAuth, } from '../../contexts/AuthContexts';
+import "./signup.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUpLogic = () => {
     const emailRef = useRef();
     const passwordRef = useRef();
-    const passwordConfirmRef = useRef();
-    // const { signup } = useAuth();
+    const nameRef = useRef();
+    const { signup } = useAuth();
     const [error, setError] = useState('');
+    const [ermail, setErmail] = useState('');
     const [Loading, setLoading] = useState(false);
     const history = useHistory();
+    // const { getuser } = useAuth();
+    let isValid = true;
+    const notify = () => toast("Wow so easy!");
 
     async function handleSubmit(e) {
         e.preventDefault();
+        
+        try {
+            setError("");
+            setErmail("");
+            
+              if (typeof passwordRef !== "undefined") {
 
-        if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-            return setError('Passwords Do not match!');
+                if(passwordRef.length < 6){
+        
+                    setError("Please add at least 6 charachter.");
+        
+                }
+        
+              }
+              if (typeof emailRef !== "undefined") {
+                var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+        
+                if (!pattern.test(emailRef)){
+                    isValid(false);
+                 setErmail("Please enter valid email address.");
+                }
+        
+              }
+            
+            setLoading(true);
+            await signup(emailRef.current.value, passwordRef.current.value);
+            // getuser();
+            history.push("/home");
+
+        } catch {
+            
+            // setError('failed to create an account');
         }
 
-            
+        setLoading(false);
+        
 
        
     }
@@ -34,8 +71,15 @@ const SignUpLogic = () => {
                         <Card.Body>
                             <h2 className="text-center mt-4">Sign Up</h2>
 
-                            {error && <Alert variant="danger">{error}</Alert>}
+                            
                             <Form onSubmit={handleSubmit}>
+                            {ermail && (()=>{notify()})}
+                                <Form.Group id="name">
+                                    <Form.Label>
+                                        Username
+                            </Form.Label>
+                                    <Form.Control type="text" ref={nameRef} required />
+                                </Form.Group>
                                 <Form.Group id="email">
                                     <Form.Label>
                                         Email
@@ -44,16 +88,11 @@ const SignUpLogic = () => {
                                 </Form.Group>
                                 <Form.Group id="password">
                                     <Form.Label>
-                                        Password
+                                        Password 
                             </Form.Label>
                                     <Form.Control type="password" ref={passwordRef} required />
                                 </Form.Group>
-                                <Form.Group id="password-confirm">
-                                    <Form.Label>
-                                        Password Confirmfation
-                            </Form.Label>
-                                    <Form.Control type="password" ref={passwordConfirmRef} required />
-                                </Form.Group>
+                                
                                 <Button disabled={Loading} className="w-100 mt-3" type="submit">Sign Up</Button>
                             </Form>
                         </Card.Body>
