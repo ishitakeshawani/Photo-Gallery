@@ -29,9 +29,7 @@ body{
   height: 60px;
   font-size: 0.8rem;
 }
-.error{
-  color: var(--error);
-}
+
 
 /* progress bar styles */
 .progress-bar{
