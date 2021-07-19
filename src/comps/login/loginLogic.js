@@ -35,8 +35,8 @@ const LoginLogic = () => {
         <>
 
             
-            <Container className="d-flex align-items-center justify-content-center"
-                style={{ minHeight: "70vh" }}
+            <Container className="d-flex align-items-center"
+                style={{ minHeight: "80vh" }}
             >
                
                 <div className="w-100" style={{ maxWidth: "500px" }}>
