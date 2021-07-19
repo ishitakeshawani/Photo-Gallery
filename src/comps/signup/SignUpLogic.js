@@ -3,62 +3,81 @@ import { Form, Button, Card, Alert, Container } from 'react-bootstrap';
 import { Link, useHistory } from "react-router-dom";
 import { useAuth, } from '../../contexts/AuthContexts';
 import "./signup.css";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
+toast.configure();
 
 const SignUpLogic = () => {
-    const emailRef = useRef();
-    const passwordRef = useRef();
-    const nameRef = useRef();
+    const [username, setUserName] = useState("");
+    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
     const { signup } = useAuth();
-    const [error, setError] = useState('');
-    const [ermail, setErmail] = useState('');
+    let [errors, setErrors] = useState('');
     const [Loading, setLoading] = useState(false);
     const history = useHistory();
-    // const { getuser } = useAuth();
-    let isValid = true;
-    const notify = () => toast("Wow so easy!");
+    
+    const finalValidate = () => {
+    errors = {};
 
+    if (username === undefined || username === "")
+      errors.username = "Please enter your name";
+    else if (
+      username.length < 4
+    )
+      errors.username = "Please enter at least 4 characters";
+
+    if ((email === undefined || email === ""))
+      errors.email = "Please enter your email";
+    else if (
+      !/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(
+       email
+      )
+    )
+      errors.email = "Please enter a valid username address";
+
+    if (
+        password.length < 6
+      )
+        errors.password = "Please enter at least 6 characters";
+  
+    setErrors(errors);
+
+    if (Object.entries(errors).length === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+   
     async function handleSubmit(e) {
         e.preventDefault();
+        if (!finalValidate()) return;
+        setLoading(true);
         
         try {
-            setError("");
-            setErmail("");
+            await signup(email, password);
+            let message =
+        "Sign Up successfully";
+      toast.success(message, {
+        position: "top-right",
+        autoClose: 0,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+              
+            setLoading(false);
             
-              if (typeof passwordRef !== "undefined") {
-
-                if(passwordRef.length < 6){
-        
-                    setError("Please add at least 6 charachter.");
-        
-                }
-        
-              }
-              if (typeof emailRef !== "undefined") {
-                var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-        
-                if (!pattern.test(emailRef)){
-                    isValid(false);
-                 setErmail("Please enter valid email address.");
-                }
-        
-              }
-            
-            setLoading(true);
-            await signup(emailRef.current.value, passwordRef.current.value);
-            // getuser();
             history.push("/home");
 
-        } catch {
+        } catch(error) {
+            errors = {};
+            errors.other = error.message;
+            setErrors(errors);
+            setLoading(false);
             
-            // setError('failed to create an account');
-        }
-
-        setLoading(false);
-        
-
-       
+        }    
     }
 
     return (
@@ -70,31 +89,61 @@ const SignUpLogic = () => {
                     <Card>
                         <Card.Body>
                             <h2 className="text-center mt-4">Sign Up</h2>
-
                             
-                            <Form onSubmit={handleSubmit}>
-                            {ermail && (()=>{notify()})}
-                                <Form.Group id="name">
-                                    <Form.Label>
-                                        Username
-                            </Form.Label>
-                                    <Form.Control type="text" ref={nameRef} required />
-                                </Form.Group>
-                                <Form.Group id="email">
-                                    <Form.Label>
-                                        Email
-                            </Form.Label>
-                                    <Form.Control type="email" ref={emailRef} required />
-                                </Form.Group>
-                                <Form.Group id="password">
-                                    <Form.Label>
-                                        Password 
-                            </Form.Label>
-                                    <Form.Control type="password" ref={passwordRef} required />
-                                </Form.Group>
-                                
-                                <Button disabled={Loading} className="w-100 mt-3" type="submit">Sign Up</Button>
-                            </Form>
+                            <form>
+                        <div className="form-group">
+                        <label htmlFor="username">Username</label>
+                        <input
+                            required
+                            type="username"
+                            className="form-control"
+                            name="username"
+                            id="username"
+                            value={username}
+                            
+                            onChange={(e) => {
+                            setUserName(e.target.value);
+                            }}
+            
+                                    />
+                    <span className="form-text text-danger">{errors.username || ""}</span>
+                    </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email</label>
+                    <input type="email" class="form-control"
+                        name="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => {
+                        setEmail(e.target.value);
+                        }}
+                    />
+                    <span className="form-text text-danger">{errors.email || ""}</span>
+                </div>
+                <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input type="password" 
+                    name="password"
+                    value={password}
+                    class="form-control"
+                    onChange={(e) => {
+                        setPassword(e.target.value);
+                    }}
+                    />
+                    <span className="form-text text-danger">{errors.password || ""}</span>
+                </div>
+                                <div className="text-center">
+                                <button 
+                            type="button"
+                            onClick={(e) => handleSubmit(e)}
+                            className="btn btn-primary"
+                            disabled={Loading}
+                            >Sign UP
+                            </button>
+                            </div>
+            </form>
+            <span className="form-text text-danger">{errors.other || ""}</span>                       
+                            
                         </Card.Body>
                     </Card>
                     <div className="w-100 text-center mt-2">
