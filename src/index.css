@@ -21,7 +21,9 @@ body {
   letter-spacing: 2px;
   font-weight: normal;
 }
-.title h2,
+.title {
+  text-align: center !important;
+}
 .title p {
   text-align: center;
 }
@@ -33,7 +35,7 @@ body {
 /* upload form styles */
 form {
   margin: 30px auto 10px;
-  text-align: center;
+  /* text-align: center; */
 }
 .label input {
   height: 0;
