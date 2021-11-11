@@ -10,17 +10,15 @@ const NavBari = () => {
       <Container>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mr-auto">
+          <Nav className="mr-auto home">
             <Nav.Link href="/">Home</Nav.Link>
           </Nav>
           <Nav className="justify-content-end">
-            <Button variant="outline-info">
-              <Link to="/login">Sign In</Link>
-            </Button>
-            &nbsp;
+            <Link to="/login">
             <Button variant="info">
-              <Link to="/">Sign Up</Link>
+              Log out
             </Button>
+            </Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
