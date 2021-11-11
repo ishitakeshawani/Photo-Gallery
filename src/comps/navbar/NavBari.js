@@ -1,7 +1,8 @@
 import  React from "react";
-import { Navbar,Nav, Container, Form, Button, FormControl } from "react-bootstrap";
+import { Navbar,Nav, Container,Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./navbar.css";
+import {Link } from 'react-router-dom'
 
 const NavBari = () => {
     return (
@@ -13,14 +14,9 @@ const NavBari = () => {
                         <Nav.Link href="/">Home</Nav.Link>
                          
                     </Nav>
-                    <Form inline>
-                        <FormControl type="text" placeholder="Search Here" className="mr-sm-2" />
-                        <Button variant="outline-info">Search</Button>
-                        
-                    </Form>
                     <Nav className="justify-content-end">
-                        <Button variant="outline-info">Sign In</Button>&nbsp;
-                        <Button variant="info">Sign Up</Button>
+                        <Button variant="outline-info"><Link to="/login">Sign In</Link></Button>&nbsp;
+                        <Button variant="info"><Link to="/">Sign Up</Link></Button>
                     </Nav> 
                 </Navbar.Collapse>
             </Container>

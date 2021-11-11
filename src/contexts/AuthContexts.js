@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
         const user = auth().currentUser;
         if (user !== null) {
             const displayName = user.displayName;
-            const email = user.email;
+            // const email = user.email;
             // const photoURL = user.photoURL;
             // const emailVerified = user.emailVerified;
             const uid = user.uid;

@@ -1,5 +1,5 @@
-import React, { useRef, useState} from 'react';
-import { Form, Button, Card, Alert, Container } from 'react-bootstrap';
+import React, { useState} from 'react';
+import { Card, Container } from 'react-bootstrap';
 import { Link, useHistory } from "react-router-dom";
 import { useAuth, } from '../../contexts/AuthContexts';
 import "./signup.css";
